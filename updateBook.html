@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="http://login2explore.com/jpdb/resources/js/0.0.3/jpdb-commons.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+        integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <title>Update Book</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 500px;
+            padding: 30px;
+            background-color: rgb(241, 241, 241);
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Update Book</h1>
+        <p>Fill the fields to update the book</p>
+        <form class="updateBookForm" method="POST">
+            <div class="form-group">
+                <label for="bookName">Book Name</label>
+                <input type="text" class="form-control" placeholder="Enter Book Name" name="bookName" id="bookName">
+            </div>
+            <div class="form-group">
+                <label for="bookNumber">Book Number</label>
+                <input type="text" class="form-control" placeholder="Enter Book Number" name="bookNumber"
+                    id="bookNumber">
+            </div>
+            <div class="form-group">
+                <label for="bookAuthor">Book Author</label>
+                <input type="text" class="form-control" placeholder="Enter Author Name" name="bookAuthor"
+                    id="bookAuthor">
+            </div>
+            <input type="button" class="btn btn-primary" value="Update &raquo;" onclick="updateBook();">
+        </form>
+    </div>
+    <script>
+        function dataValidator() {
+            var bNameVar = document.getElementById("bookName").value;
+            var bNumberVar = parseInt(document.getElementById("bookNumber").value);
+            var bAuthorVar = document.getElementById("bookAuthor").value;
+
+            var jsonStrObj = {
+                bookNumber: {
+                    bookName: bNameVar,
+                    bookNumber: bNumberVar,
+                    bookAuthor: bAuthorVar
+                }
+            };
+            return JSON.stringify(jsonStrObj);
+        }
+
+        function resetForm() {
+            document.getElementById("updateBookForm").reset();
+        }
+
+        function updateBook() {
+            var jsonStrObj = dataValidator();
+            if (jsonStrObj === "") {
+                return "";
+            }
+
+            var updateReqStr = createUPDATERecordRequest("90935644|-31948840429003577|90933452", jsonStrObj, "Books", "Books-Rel", bNumberVar);
+
+            alert(updateReqStr);
+            jQuery.ajaxSetup({ async: false });
+            var resultStr = executeCommandAtGivenBaseUrl(updateReqStr, "http://api.login2explore.com:5577", "/api/iml");
+            jQuery.ajaxSetup({ async: true });
+            alert(JSON.stringify(resultStr));
+
+            resetForm();
+        }
+    </script>
+</body>
+
+</html>
